@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Matrix - Dashboard de Otimização</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.png" type="image/png">
+</head>
+<body>
+    <header class="topbar">
+        <div class="brand">
+            <div class="logo">
+                <img src="Logo.png" alt="Aura Matrix Logo">
+            </div>
+            <h1 class="brand-title">AURA MATRIX</h1>
+        </div>
+        <div class="topbar-right">
+            <div class="search">
+                <input type="text" id="searchInput" placeholder="Pesquisar..." aria-label="Pesquisar" autocomplete="off">
+                <div id="searchResults" class="search-results" role="listbox" aria-label="Sugestões de busca"></div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li class="nav-item active" data-section="introducao">Introdução</li>
+                    <li class="nav-item" data-section="boas-praticas">Boas Práticas de Desenvolvimento</li>
+                    <li class="nav-item" data-section="testes-velocidade">Testes de Velocidade</li>
+                    <li class="nav-item" data-section="plano-otimizacao">Plano de Otimização</li>
+                    <li class="nav-item" data-section="testes-validacao">Testes, Validação e Rollback</li>
+                    <li class="nav-item" data-section="ordem-implementacao">Ordem de Implementação</li>
+                    <li class="nav-item" data-section="particularidades">Particularidades da Operação</li>
+                    <li class="nav-item" data-section="comparativo">Comparativo de Plataformas</li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="dashboard-container">
+        <main class="main-content">
+            <header class="dashboard-header">
+                <h1>Dashboard de Otimização de Performance</h1>
+            </header>
+            <section id="introducao" class="content-section active">
+                <h2>Introdução</h2>
+                <p>Este trabalho visa otimizar a velocidade de carregamento das páginas WordPress para reduzir o Connect Rate, diminuir o custo por visualização e aumentar o volume de vendas. Performance é experiência do usuário: página rápida = menos abandono, maior confiança e mais conversões.</p>
+                <p>As otimizações estão organizadas em 4 bases:</p>
+                <ul>
+                    <li>Boas práticas de desenvolvimento de páginas</li>
+                    <li>Testes de velocidade;</li>
+                    <li>Otimização de carregamento (fonts/BG, pré-carregamento, CSS, JS, imagens, heartbeat, FOIT/FOUT);</li>
+                    <li>CDN e cache (Cloudflare + WP Rocket).</li>
+                </ul>
+                <p>Regra de ouro: cada mudança deve ser testada. Performance só vale se não quebrar UX.</p>
+            </section>
+
+            <section id="boas-praticas" class="content-section">
+                <h2>Boas práticas de desenvolvimento (WordPress + Elementor)</h2>
+                <h3>Plugins e Tema</h3>
+                <p><strong>Problema:</strong> Cada plugin injeta código na página (mesmo sem uso direto), aumentando peso, chance de conflitos e quebra de CSS.</p>
+                <p><strong>Solução:</strong> Instalar o mínimo possível e desinstalar o que não for necessário. Atualizar plugins/tema com recorrência. Usar tema leve: Hello Elementor (recomendado).</p>
+                <p><strong>Como implementar:</strong> Audite os plugins e remova o que não agrega. Após cada instalação/atualização, teste as páginas. Padrão da operação: Hello Elementor como base.</p>
+
+                <h3>Menos widgets, mais semântica</h3>
+                <p><strong>Problema:</strong> Excesso de widgets para variações simples (ex.: tamanhos de texto) gera requisições, marcação suja e manutenção difícil.</p>
+                <p><strong>Solução:</strong> Concentrar o conteúdo em um widget HTML usando classes CSS para variações.</p>
+                <p><strong>Como implementar:</strong> Jeito certo: um widget HTML + CSS centralizado com classes (tipografia, espaçamentos, cores). Jeito errado: vários widgets só para alterar tamanho/estilo.</p>
+                <!-- [Inserir imagem “Jeito certo vs errado” aqui] -->
+
+                <h3>Evitar CSS inline</h3>
+                <p><strong>Problema:</strong> CSS inline quebra semântica, dificulta acessibilidade e prejudica SEO.</p>
+                <p><strong>Solução:</strong> HTML limpo + classes semânticas + CSS centralizado (Aparência » Personalizar » CSS adicional).</p>
+                <p><strong>Como implementar:</strong> Remover <code>style="..."</code> das tags. Criar classes (<code>.titulo</code>, <code>.sub</code>, <code>.btn</code>) e estilizar no CSS adicional. Resultado: melhor performance e manutenção.</p>
+
+                <h3>Imagens (compactação, formato e tamanho)</h3>
+                <p><strong>Problema:</strong> Imagens são o maior vilão do carregamento: peso alto e dimensões desnecessárias.</p>
+                <p><strong>Solução:</strong> Usar dimensão exata de renderização. Peso alvo: ≤ 100 KB (ideal). > 300 KB é inaceitável. Formatos: WebP (fotos/ilustrações) e SVG (ícones/vetores).</p>
+                <p><strong>Como implementar:</strong> Compactar: <a href="https://tinypng.com" target="_blank">tinypng.com</a>. Redimensionar: <a href="https://www.iloveimg.com/pt/redimensionar-imagem" target="_blank">iloveimg.com/pt/redimensionar-imagem</a>. Converter em WebP: <a href="https://convertio.co" target="_blank">convertio.co</a>. Subir já otimizadas (desktop e mobile).</p>
+
+                <h3>Fontes (e nossa política operacional)</h3>
+                <p><strong>Problema:</strong> Cada tipo/peso de fonte = uma requisição. Fontes externas atrasam o carregamento.</p>
+                <p><strong>Solução (padrão do mercado):</strong> Usar no máximo 2–3 pesos/tipos. Preferir WOFF2. Forçar <code>font-display: swap</code> (evita FOIT; permite FOUT controlado).</p>
+                <p><strong>Particularidade da operação:</strong> Não subimos fontes localmente no WordPress por conta da clonagem para múltiplos domínios. Isso gera requisições cruzadas e problemas de path. Em vez disso, ativamos o “Auto-hospedar fontes Google” do WP Rocket, que puxa e serve as fontes otimizada e automaticamente por domínio.</p>
+                <p><strong>Como otimizar fontes do Google (nosso padrão):</strong> WP Rocket → Otimização de arquivos → ativar “Otimizar entrega de fontes” / “Auto-hospedar fontes Google”. Garantir <code>font-display: swap</code> via snippet (abaixo). Reduzir pesos: só o que realmente usa (ex.: 400/700).</p>
+                <p><strong>Snippet (Code Snippets) – garantir swap no Elementor Pro:</strong></p>
+                <pre><code>add_filter( 'elementor_pro/custom_fonts/font_display', function( $current_value, $font_family, $data ) {
+  return 'swap';
+}, 10, 3 );</code></pre>
+                <p>Se algum projeto não for clonado para múltiplos domínios, opção alternativa é subir WOFF2 em Elementor Pro » Custom Fonts. Para a nossa operação, mantemos o padrão WP Rocket.</p>
+
+                <h3>Evitar requisições externas</h3>
+                <p><strong>Problema:</strong> Cada recurso em servidor externo adiciona latência e incerteza.</p>
+                <p><strong>Solução:</strong> Hospedar imagens e fontes no mesmo domínio (respeitando nossa política de fontes via WP Rocket) e minimizar chamadas de terceiros.</p>
+                <p><strong>Como implementar:</strong> Trocar URLs de imagens externas por uploads locais. Evitar bibliotecas externas quando houver alternativa local.</p>
+            </section>
+
+            <section id="testes-velocidade" class="content-section">
+                <h2>Testes de velocidade</h2>
+                <h3>Ferramentas usadas</h3>
+                <ul>
+                    <li>PageSpeed Insights</li>
+                    <li>GTmetrix</li>
+                    <li>Lighthouse (Chrome DevTools)</li>
+                    <li>WebPageTest (Complementar)</li>
+                </ul>
+
+                <h3>Métricas principais (o que acompanhar)</h3>
+                <ul>
+                    <li><strong>FCP:</strong> quando aparece o primeiro conteúdo.</li>
+                    <li><strong>LCP (< 2,5s):</strong> maior elemento visível (imagem/bloco principal).</li>
+                    <li><strong>TBT (< 200ms):</strong> tempo bloqueado por scripts longos.</li>
+                    <li><strong>CLS (< 0,1):</strong> estabilidade do layout.</li>
+                    <li><strong>Speed Index (< 3s):</strong> rapidez de preenchimento visual.</li>
+                    <li><strong>TTI (< 5s):</strong> tempo até ficar totalmente interativa.</li>
+                    <li><strong>Page Size:</strong> (quanto menor, melhor).</li>
+                    <li><strong>Requests:</strong> (< 60 na primeira dobra é uma boa meta).</li>
+                </ul>
+                <p>Dica: pré-carregar o primeiro elemento (ex.: imagem LCP) pode ajudar FCP/LCP.</p>
+
+                <h3>Comparação: WebPageTest vs GTmetrix vs PageSpeed Insights</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Critério / característica</th>
+                            <th>WebPageTest</th>
+                            <th>GTmetrix</th>
+                            <th>PageSpeed Insights</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Profundidade de análise</td>
+                            <td>Muito detalhado (filmstrip, waterfall, request-by-request)</td>
+                            <td>Detalhado, ótimos gráficos e auditorias</td>
+                            <td>Menos detalhado por requisição, foco em Web Vitals</td>
+                        </tr>
+                        <tr>
+                            <td>Customização de teste</td>
+                            <td>Alta (local, rede, navegador)</td>
+                            <td>Boa (locais, dispositivos, rede)</td>
+                            <td>Baixa (configurações limitadas)</td>
+                        </tr>
+                        <tr>
+                            <td>Medição com navegador real</td>
+                            <td>Sim</td>
+                            <td>Sim</td>
+                            <td>Ambiente controlado + dados de campo</td>
+                        </tr>
+                        <tr>
+                            <td>Histórico/monitoramento</td>
+                            <td>Básico no free; melhor no pago</td>
+                            <td>Sim (histórico e comparações)</td>
+                            <td>Não (teste pontual)</td>
+                        </tr>
+                        <tr>
+                            <td>Alinhamento com Google/SEO</td>
+                            <td>Útil, mas não “oficial”</td>
+                            <td>Integra Lighthouse/Web Vitals</td>
+                            <td>Forte alinhamento com foco em Web Vitals</td>
+                        </tr>
+                        <tr>
+                            <td>Facilidade p/ iniciantes</td>
+                            <td>Complexo</td>
+                            <td>Médio</td>
+                            <td>Muito fácil</td>
+                        </tr>
+                        <tr>
+                            <td>Uso gratuito / limites</td>
+                            <td>Free com filas/limites</td>
+                            <td>Free com restrições</td>
+                            <td>Totalmente gratuito</td>
+                        </tr>
+                        <tr>
+                            <td>Variação dos resultados</td>
+                            <td>Pode variar por infraestrutura</td>
+                            <td>Pode variar por local/rede</td>
+                            <td>Mais constante, mas pode divergir da realidade</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Em resumo (prático):</p>
+                <ul>
+                    <li>Use WebPageTest quando precisar investigar a fundo gargalos (filmstrip/waterfall).</li>
+                    <li>Use GTmetrix para visão equilibrada (gráficos, histórico, comparações).</li>
+                    <li>Use PageSpeed Insights para ver como o Google “enxerga” seu site e priorizar Web Vitals.</li>
+                </ul>
+                <p>É comum combinar: PageSpeed (prioridades) → GTmetrix/WebPageTest (diagnóstico detalhado).</p>
+            </section>
+
+            <section id="plano-otimizacao" class="content-section">
+                <h2>Plano de Otimização – WordPress + Elementor + WP Rocket + Code Snippets</h2>
+                <h3>Cache e Regras Avançadas (WP Rocket + Cloudflare)</h3>
+                <p><strong>Problema:</strong> Sem regras claras de cache, páginas dinâmicas quebram (formulários, checkout, login) ou ficam lentas por armazenar dados desnecessários. Por outro lado, páginas estáticas sem cache deixam de aproveitar a performance máxima.</p>
+                <p><strong>Solução:</strong> Combinar regras no Cloudflare e no WP Rocket para equilibrar cache agressivo em páginas estáticas e exceções em páginas dinâmicas.</p>
+                <p><strong>Como implementar:</strong></p>
+                <h4>Cloudflare</h4>
+                <ul>
+                    <li>Criar regra “Sem cache wp-admin”: Condição: URI Path contém <code>/wp-admin</code> → ação: Bypass cache.</li>
+                    <li>Criar regra “Cache Everything” para o domínio: Edge TTL alto em páginas estáticas (até 6 meses). Browser TTL menor em páginas dinâmicas (algumas horas/dias).</li>
+                </ul>
+                <p>Ordem importa → a regra do wp-admin deve vir primeiro. Se precisar diferenciar slugs específicos (ex.: página de obrigado, políticas), crie regras adicionais.</p>
+                <h4>WP Rocket</h4>
+                <ul>
+                    <li>Tempo global de cache: 2–4h (nossas páginas mudam constantemente).</li>
+                    <li>Excluir URLs estáticas de baixa atualização: ex.: <code>/gracias/</code>, <code>/termos/</code>.</li>
+                    <li>Regras avançadas → “URL(s) Jamais em Cache”: adicionar slugs específicos.</li>
+                </ul>
+                <p><strong>Prós e Contras:</strong> Cache agressivo melhora bastante performance, mas pode causar inconsistências em páginas com atualização constante. Cache curto resolve inconsistência, mas aumenta requisições ao servidor. O equilíbrio depende do tipo de página.</p>
+
+                <h3>Delay / Defer de JavaScript</h3>
+                <p><strong>Problema:</strong> Scripts bloqueiam renderização (TBT alto). Porém, atrasar todos os JS pode quebrar funcionalidades críticas (VSL, chatbot, tracking).</p>
+                <p><strong>Solução:</strong> Atrasar ou adiar apenas scripts não críticos, mantendo os essenciais intactos.</p>
+                <p><strong>Como implementar (WP Rocket):</strong> Ativar “Atrasar execução de JS”. Inserir exceções: Scripts de VSL (VTurb). Scripts de tracking (Pixel, Google Tag, etc.). Chatbots. Ativar “Carregar JavaScript adiado (defer)” para o restante.</p>
+                <p><strong>Particularidades da operação:</strong> Em páginas de VSL, nunca atrasar JS → o player trava. Em páginas com chatbot, atrasar JS gera lentidão no envio/recebimento de mensagens. Lista de exclusões deve ser mantida como checklist vivo.</p>
+                <p><strong>Prós e Contras:</strong> Prós: melhora grande em métricas de bloqueio. Contras: alto risco de quebra se mal configurado → exige testes cuidadosos.</p>
+
+                <h3>LazyLoad de imagens / iframes / vídeos</h3>
+                <p><strong>Problema:</strong> Imagens e vídeos pesados aumentam LCP e carregam desnecessariamente antes do usuário rolar a página.</p>
+                <p><strong>Solução:</strong> Carregar imagens e vídeos sob demanda, mas excluir os elementos da primeira dobra (logo, herói, imagem LCP).</p>
+                <p><strong>Como implementar (WP Rocket):</strong> Ativar LazyLoad para imagens, iframes e vídeos. Ativar substituição do iframe do YouTube pela thumb (carrega só 10 KB até clicar em play, em vez de 1 MB). Excluir do LazyLoad (campo de exclusão do WP Rocket): <code>.header-logo</code>, <code>.hero .elementor-image img</code>, <code>.slider-hero img</code>.</p>
+                <p><strong>Prós e Contras:</strong> Prós: páginas longas ficam muito mais leves. Contras: se esquecer de excluir imagens críticas (LCP), o efeito pode ser contrário → aumento de métricas.</p>
+
+                <h3>CSS (otimização de entrega)</h3>
+                <p><strong>Problema:</strong> CSS bloqueante atrasa renderização, e excesso de código inútil aumenta o tamanho do arquivo.</p>
+                <p><strong>Solução:</strong> Minificar, remover CSS não usado e entregar CSS crítico primeiro.</p>
+                <p><strong>Como implementar (WP Rocket + Elementor):</strong> WP Rocket → Ativar “Minificar CSS”. WP Rocket → Ativar “Otimizar entrega de CSS”. Elementor → Ferramentas → “Limpar arquivos e dados”.</p>
+                <p><strong>Prós e Contras:</strong> Prós: menos peso, renderização mais rápida. Contras: pode quebrar estilos específicos → sempre validar visualmente após a limpeza.</p>
+
+                <h3>Fontes e Backgrounds</h3>
+                <p><strong>Problema:</strong> Fontes externas e backgrounds pesados aumentam requisições e carregamento.</p>
+                <p><strong>Solução:</strong> Usar auto-hospedar fontes Google (WP Rocket). Ativar <code>font-display: swap</code>. Converter imagens de fundo para WebP ou substituir por gradientes CSS.</p>
+                <p><strong>Como implementar:</strong> Elementor Pro → Custom Fonts (quando não há clonagem de domínios). Nossa operação → WP Rocket “Auto-hospedar fontes Google”. Code Snippets → adicionar <code>font-display: swap</code>. Converter backgrounds > 100 KB em WebP. Sempre que possível, substituir BGs por gradientes CSS.</p>
+                <p><strong>Prós e Contras:</strong> Prós: fontes rápidas, BGs leves, experiência mais fluida. Contras: ao usar fontes locais em clones → quebra em múltiplos domínios (por isso não adotamos).</p>
+
+                <h3>Pré-carregamento (Preload / Preconnect)</h3>
+                <p><strong>Problema:</strong> Recursos críticos (LCP, fontes) demoram a ser servidos sem preload.</p>
+                <p><strong>Solução:</strong> Pré-carregar apenas recursos críticos e inevitáveis.</p>
+                <p><strong>Como implementar (WP Rocket):</strong> Em “Pré-carregamento”, adicionar fontes WOFF2 usadas no topo (ex.: Roboto-700.woff2). Evitar excesso (só o que for crítico). Pré-carregar a imagem LCP quando fizer sentido.</p>
+                <p><strong>Prós e Contras:</strong> Prós: melhora LCP e FCP. Contras: excesso de preloads pode até piorar a performance.</p>
+
+                <h3>Heartbeat</h3>
+                <p><strong>Problema:</strong> Heartbeat consome recursos do servidor sem necessidade no front-end.</p>
+                <p><strong>Solução:</strong> Reduzir no painel e edição, desativar no front.</p>
+                <p><strong>Como implementar (WP Rocket):</strong> Painel/Admin: “Reduzir atividade”. Edição: “Reduzir atividade”. Front-end: “Desativar” (se não houver edição ao vivo).</p>
+
+                <h3>Garantir texto antes da fonte (FOIT → FOUT controlado)</h3>
+                <p><strong>Problema:</strong> Sem configuração, o usuário vê “tela branca” até a fonte carregar (FOIT).</p>
+                <p><strong>Solução:</strong> Trocar FOIT por FOUT: texto aparece com fonte fallback e depois troca para a fonte final.</p>
+                <p><strong>Como implementar (Code Snippets):</strong></p>
+                <pre><code>add_filter( 'elementor_pro/custom_fonts/font_display', function( $current_value, $font_family, $data ) {
+  return 'swap';
+}, 10, 3 );</code></pre>
+            </section>
+
+            <section id="testes-validacao" class="content-section">
+                <h2>Testes, validação e rollback</h2>
+                <p><strong>Problema:</strong> Sem validação, é impossível saber se as otimizações funcionaram ou quebraram a página.</p>
+                <p><strong>Solução:</strong> Testar em várias ferramentas + navegação real + rollback rápido.</p>
+                <p><strong>Como implementar:</strong> Limpar caches (WP Rocket + CDN). Regenerar CSS/Dados (Elementor). Testar em abas anônimas. Validar funções críticas: menus, checkout, reCAPTCHA, tracking. Medir novamente em PageSpeed, WebPageTest, GTmetrix. Documentar “Antes” e “Depois”.</p>
+                <h3>Rollback</h3>
+                <ul>
+                    <li>Desativar Delay JS.</li>
+                    <li>Remover exclusões agressivas.</li>
+                    <li>Desativar otimização de CSS.</li>
+                    <li>Remover snippets recentes.</li>
+                    <li>Restaurar backup se necessário.</li>
+                </ul>
+            </section>
+
+            <section id="ordem-implementacao" class="content-section">
+                <h2>Ordem recomendada de implementação</h2>
+                <ol>
+                    <li>Boas práticas de desenvolvimento.</li>
+                    <li>Imagens (WebP + redimensionadas).</li>
+                    <li>Fontes (Google auto-hospedadas + swap).</li>
+                    <li>CSS (otimizar entrega).</li>
+                    <li>JS (Delay/Defer + exceções).</li>
+                    <li>LazyLoad (excluir primeira dobra).</li>
+                    <li>Heartbeat.</li>
+                    <li>CDN sem cookies (quando aplicável).</li>
+                    <li>Testes + métricas + rollback.</li>
+                </ol>
+            </section>
+
+            <section id="particularidades" class="content-section">
+                <h2>Particularidades da nossa operação</h2>
+                <ul>
+                    <li><strong>Clonagem de domínios:</strong> evitar fontes locais → usar auto-hospedar do WP Rocket.</li>
+                    <li><strong>SEO Google:</strong> imagens precisam estar no domínio → não usamos subdomínio CDN para assets.</li>
+                    <li><strong>VSL (VTurb):</strong> embed exige remover Delay JS.</li>
+                    <li><strong>Chatbot:</strong> se JS atrasado → tempo de resposta lento.</li>
+                </ul>
+                <h3>Conclusão</h3>
+                <p>Aplicando este manual, já tivemos ganhos significativos em velocidade e estabilidade das páginas. O próximo passo é evoluir também em layout e experiência do usuário, garantindo que a performance técnica esteja sempre alinhada à eficácia comercial.</p>
+            </section>
+
+            <section id="comparativo" class="content-section">
+                <h2>Comparativo de Plataformas para Páginas Estáticas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>HTML, CSS & JavaScript Puro</th>
+                            <th>WordPress (com Elementor)</th>
+                            <th>Atomicat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Controle e Flexibilidade</strong></td>
+                            <td>Máximo controle sobre cada pixel e funcionalidade. Ideal para designs únicos e otimização extrema.</td>
+                            <td>Bom controle via tema e plugins, mas limitado pela estrutura do CMS.</td>
+                            <td>Controle moderado, focado em landing pages e funis de venda.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Performance</strong></td>
+                            <td>Potencialmente a mais rápida, com código mínimo e otimizado.</td>
+                            <td>Pode ser rápida com otimização (WP Rocket, etc.), mas plugins e tema adicionam peso.</td>
+                            <td>Boa performance, otimizado para conversão.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Custo</strong></td>
+                            <td>Baixo (apenas hospedagem e domínio). Ferramentas de desenvolvimento gratuitas.</td>
+                            <td>Moderado a alto (hospedagem, domínio, temas/plugins premium).</td>
+                            <td>Baseado em assinatura, custo pode ser significativo.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Curva de Aprendizagem</strong></td>
+                            <td>Alta (requer conhecimento de programação).</td>
+                            <td>Média (interface visual, mas exige entender o ecossistema).</td>
+                            <td>Baixa (focado em arrastar e soltar).</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Manutenção</strong></td>
+                            <td>Requer conhecimento técnico para atualizações e correções.</td>
+                            <td>Atualizações de CMS, temas e plugins constantes. Risco de conflitos.</td>
+                            <td>Baixa, gerenciada pela plataforma.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SEO</strong></td>
+                            <td>Excelente, com controle total sobre a estrutura e metadados.</td>
+                            <td>Bom, com plugins como Yoast SEO ou Rank Math.</td>
+                            <td>Bom, com recursos de SEO integrados.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Escalabilidade</strong></td>
+                            <td>Muito escalável, mas pode exigir mais esforço para gerenciar conteúdo dinâmico.</td>
+                            <td>Boa para blogs e sites de conteúdo, pode exigir otimização para alto tráfego.</td>
+                            <td>Escalável para campanhas de marketing e vendas.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Uso Típico</strong></td>
+                            <td>Sites institucionais, landing pages de alta performance, protótipos.</td>
+                            <td>Blogs, sites corporativos, e-commerce (com WooCommerce).</td>
+                            <td>Landing pages, páginas de vendas, funis de marketing.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

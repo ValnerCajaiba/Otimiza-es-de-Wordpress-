@@ -1,0 +1,271 @@
+/* Variáveis CSS para cores da Aura Matrix */
+:root {
+    --aura-dark-blue: #0A1F3F;
+    --aura-white: #FFFFFF;
+    --aura-black: #000000;
+    --aura-light-gray: #F5F5F5;
+    --aura-medium-gray: #CCCCCC;
+    --aura-text-color: #333333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--aura-light-gray);
+    color: var(--aura-text-color);
+    min-height: 100vh;
+}
+
+/* Topbar (novo header) */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    background-color: var(--aura-dark-blue);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.topbar .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px 8px 20px;
+    background-color:#0A1F3F;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 20px 12px 20px;
+}
+
+/* Busca */
+.search { position: relative; }
+.search input {
+    width: 240px;
+    max-width: 40vw;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--aura-white);
+    padding: 10px 12px;
+    border-radius: 8px;
+    outline: none;
+}
+.search input::placeholder { color: rgba(255,255,255,0.75); }
+.search input:focus { background: rgba(255,255,255,0.18); }
+
+.search-results {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #FFFFFF;
+    color: #222;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    max-height: 320px;
+    overflow: auto;
+    display: none;
+    z-index: 20;
+}
+.search-results.show { display: block; }
+.search-results .result-item {
+    padding: 10px 12px;
+    cursor: pointer;
+}
+.search-results .result-item:hover {
+    background: #f5f7fb;
+}
+
+.topbar .brand-title {
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.12em;
+    color: var(--aura-white);
+    font-weight: 800;
+}
+
+.logo {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.logo img {
+    max-width: 120px; /* reduz o tamanho da logo */
+    height: auto;
+    display: block;
+}
+
+.main-nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    padding: 10px 20px 14px 20px;
+    margin: 0;
+}
+
+.main-nav li {
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 600;
+    color: var(--aura-white);
+}
+
+.main-nav li:hover {
+    background-color: rgba(255,255,255,0.12);
+}
+
+.main-nav li.active {
+    background-color: rgba(255,255,255,0.22);
+    color: var(--aura-white);
+    outline: 1px solid rgba(255,255,255,0.25);
+}
+
+.dashboard-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 24px auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
+    background-color: var(--aura-white);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.main-content {
+    padding: 36px 40px;
+}
+
+.dashboard-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--aura-medium-gray);
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    color: var(--aura-dark-blue);
+    font-size: 2rem;
+}
+
+.content-section {
+    display: none;
+    margin-bottom: 40px;
+}
+
+.content-section.active {
+    display: block;
+}
+
+.content-section h2 {
+    color: var(--aura-dark-blue);
+    font-size: 1.8em;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.content-section h3 {
+    color: var(--aura-dark-blue);
+    font-size: 1.4em;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    border-bottom: 1px dashed var(--aura-medium-gray);
+    padding-bottom: 5px;
+}
+
+.content-section h4 {
+    color: var(--aura-dark-blue);
+    font-size: 1.2em;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.content-section p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.content-section ul,
+.content-section ol {
+    margin-bottom: 15px;
+    padding-left: 20px;
+}
+
+.content-section ul li,
+.content-section ol li {
+    margin-bottom: 8px;
+}
+
+.content-section a {
+    color: var(--aura-dark-blue);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.content-section a:hover {
+    text-decoration: underline;
+}
+
+.content-section pre {
+    background-color: #eef;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.content-section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    background-color: var(--aura-white);
+}
+
+.content-section table th,
+.content-section table td {
+    border: 1px solid var(--aura-medium-gray);
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.content-section table th {
+    background-color: var(--aura-dark-blue);
+    color: var(--aura-white);
+    font-weight: bold;
+}
+
+.content-section table tr:nth-child(even) {
+    background-color: var(--aura-light-gray);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .main-nav ul { justify-content: flex-start; }
+    .main-nav li { font-size: 0.9em; }
+    .dashboard-container { margin: 16px; }
+    .main-content { padding: 24px; }
+
+    .dashboard-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .content-section h2 {
+        font-size: 1.5rem;
+    }
+
+    .content-section h3 {
+        font-size: 1.2rem;
+    }
+}
