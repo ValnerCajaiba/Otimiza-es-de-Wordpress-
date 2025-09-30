@@ -19,9 +19,7 @@ body {
    
 /* Topbar (novo header) */
 .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    position: relative; /* corrigido para não fixar */
     width: 100%;
     background-color: var(--aura-dark-blue);
     border-bottom: 1px solid rgba(255,255,255,0.12);
@@ -33,7 +31,7 @@ body {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    padding: 42px 20px 8px 20px;
+    padding: 20px 10px 6px 1px;
     background-color:#0A1F3F;
 }
 
