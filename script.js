@@ -3,6 +3,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const contentSections = document.querySelectorAll(".content-section");
     const searchInput = document.getElementById("searchInput");
     const searchResults = document.getElementById("searchResults");
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mainNav = document.getElementById('mainNav');
+    const backdrop = document.getElementById('backdrop');
 
     navItems.forEach(item => {
         item.addEventListener("click", function() {
@@ -16,6 +19,9 @@ document.addEventListener("DOMContentLoaded", function() {
             // Show corresponding content section
             const targetSectionId = this.getAttribute("data-section");
             document.getElementById(targetSectionId).classList.add("active");
+
+            // Fechar menu mobile após a navegação
+            closeMobileMenu();
         });
     });
 
@@ -103,5 +109,38 @@ document.addEventListener("DOMContentLoaded", function() {
                 searchResults.classList.remove('show');
             }
         });
+    }
+
+    // ------ Menu Mobile ------
+    function openMobileMenu() {
+        if (!mainNav) return;
+        mainNav.classList.add('open');
+        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'true');
+        if (backdrop) { backdrop.classList.add('show'); backdrop.setAttribute('aria-hidden', 'false'); }
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        if (!mainNav) return;
+        mainNav.classList.remove('open');
+        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+        if (backdrop) { backdrop.classList.remove('show'); backdrop.setAttribute('aria-hidden', 'true'); }
+        document.body.style.overflow = '';
+    }
+
+    function toggleMobileMenu() {
+        if (!mainNav) return;
+        if (mainNav.classList.contains('open')) {
+            closeMobileMenu();
+        } else {
+            openMobileMenu();
+        }
+    }
+
+    if (menuToggle) {
+        menuToggle.addEventListener('click', toggleMobileMenu);
+    }
+    if (backdrop) {
+        backdrop.addEventListener('click', closeMobileMenu);
     }
 });

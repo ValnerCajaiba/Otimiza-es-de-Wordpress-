@@ -13,14 +13,18 @@
             <div class="logo">
                 <img src="Logo.png" alt="Aura Matrix Logo">
             </div>
-            <h1 class="brand-title">AURA MATRIX</h1>
         </div>
         <div class="topbar-right">
+            <button class="menu-toggle" aria-label="Abrir menu" aria-controls="mainNav" aria-expanded="false">
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+                <span class="menu-bar"></span>
+            </button>
             <div class="search">
                 <input type="text" id="searchInput" placeholder="Pesquisar..." aria-label="Pesquisar" autocomplete="off">
                 <div id="searchResults" class="search-results" role="listbox" aria-label="Sugestões de busca"></div>
             </div>
-            <nav class="main-nav">
+            <nav id="mainNav" class="main-nav" aria-label="Navegação principal">
                 <ul>
                     <li class="nav-item active" data-section="introducao">Introdução</li>
                     <li class="nav-item" data-section="boas-praticas">Boas Práticas de Desenvolvimento</li>
@@ -34,6 +38,7 @@
             </nav>
         </div>
     </header>
+    <div id="backdrop" class="backdrop" aria-hidden="true"></div>
     <div class="dashboard-container">
         <main class="main-content">
             <header class="dashboard-header">

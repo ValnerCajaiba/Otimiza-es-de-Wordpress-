@@ -16,7 +16,7 @@ body {
     color: var(--aura-text-color);
     min-height: 100vh;
 }
-
+   
 /* Topbar (novo header) */
 .topbar {
     position: sticky;
@@ -31,20 +31,41 @@ body {
 .topbar .brand {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 12px;
-    padding: 12px 20px 8px 20px;
+    padding: 42px 20px 8px 20px;
     background-color:#0A1F3F;
 }
 
 .topbar-right {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 16px;
     padding: 8px 20px 12px 20px;
 }
 
+/* Botão menu (hambúrguer) */
+.menu-toggle {
+    display: none;
+    background: transparent;
+    border: 0;
+    padding: 8px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.menu-toggle:focus { outline: 2px solid rgba(255,255,255,0.6); outline-offset: 2px; }
+.menu-toggle .menu-bar {
+    display: block;
+    width: 25px;
+    height: 4px;
+    background: var(--aura-white);
+    margin: 6px 0;
+    transition: transform 0.2s ease;
+}
+
 /* Busca */
-.search { position: relative; }
+.search { position: relative; margin-bottom: 38px; }
 .search input {
     width: 240px;
     max-width: 40vw;
@@ -91,7 +112,8 @@ body {
 }
 
 .logo {
-    margin: 0;
+    margin-top:22px;
+    margin-bottom: 10px;
     padding: 0;
     border: 0;
 }
@@ -112,6 +134,11 @@ body {
     margin: 0;
 }
 
+/* Desktop: navegação em cima, busca abaixo */
+.main-nav { order: 1; width: 100%; }
+.search { order: 2; width: 100%; }
+.search input { width: 80%;}
+
 .main-nav li {
     cursor: pointer;
     padding: 8px 12px;
@@ -119,6 +146,13 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
     font-weight: 600;
     color: var(--aura-white);
+}
+
+/* Layout desktop: centralizar busca e 5 itens por linha no menu */
+@media (min-width: 769px) {
+    .search { display: flex; justify-content: center; }
+    .main-nav ul { justify-content: center; }
+    .main-nav li { flex: 0 0 20%; text-align: center; }
 }
 
 .main-nav li:hover {
@@ -250,22 +284,74 @@ body {
     background-color: var(--aura-light-gray);
 }
 
+/* Backdrop para menu mobile */
+.backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    z-index: 9;
+}
+.backdrop.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
-    .main-nav ul { justify-content: flex-start; }
-    .main-nav li { font-size: 0.9em; }
-    .dashboard-container { margin: 16px; }
-    .main-content { padding: 24px; }
+    .menu-toggle { display: inline-block; margin-bottom:38px; }
+
+    .topbar { box-shadow: none; }
+    .topbar .brand { padding: 10px 16px 6px 16px; }
+    .topbar-right { padding: 6px 6px 6px 16px; gap: 10px; }
+
+    /* Navegação vira drawer */
+    .main-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: min(86vw, 320px);
+        background: var(--aura-dark-blue);
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        z-index: 10;
+        box-shadow: 4px 0 16px rgba(0,0,0,0.25);
+        padding-top: 64px;
+    }
+    .main-nav.open { transform: translateX(0); }
+    .main-nav ul {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+    }
+    .main-nav li { font-size: 1rem; padding: 14px 16px; border-radius: 0; }
+    .main-nav li + li { border-top: 1px solid rgba(255,255,255,0.08); }
+
+    /* Busca full-width no mobile */
+    .search { flex: 1; }
+    .search input { width: 90%; max-width: none; }
+    .search-results { position: fixed; left: 16px; right: 16px; top: 86px; max-height: 50vh; }
+
+    /* Container e tipografia */
+    .dashboard-container { width: 95%; border-radius: 10px; }
+    .main-content { padding: 18px; }
 
     .dashboard-header h1 {
-        font-size: 1.5rem;
+        font-size: 1.35rem;
     }
 
     .content-section h2 {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
     }
 
     .content-section h3 {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
     }
+
+    .content-section table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .content-section table th, .content-section table td { white-space: nowrap; }
 }
